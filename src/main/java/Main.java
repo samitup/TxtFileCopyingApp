@@ -1,5 +1,3 @@
-// Java program to implement solution of producer
-// consumer pro
 
 import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
