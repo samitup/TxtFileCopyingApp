@@ -6,13 +6,15 @@ import java.util.concurrent.BlockingQueue;
 
 public class Reader {
     private final BlockingQueue<Integer> buffer;
-    private final java.io.Reader reader;
+    private final FileReader fileReader;
+    private final java.io.Reader bufferedReader;
     private volatile boolean closed;
 
 
     public Reader(BlockingQueue<Integer> buffer, String pathToFileToBeCopied) throws IOException {
         File file = new File(pathToFileToBeCopied);
-        this.reader = new BufferedReader(new FileReader(file));
+        this.fileReader = new FileReader(file);
+        this.bufferedReader = new BufferedReader(fileReader);
         this.buffer = buffer;
     }
 
@@ -21,7 +23,7 @@ public class Reader {
 
         while (true) {
             try {
-                int b = reader.read();
+                int b = bufferedReader.read();
                 buffer.put(b);
                 if (b != -1) {
                     System.out.println("Read from file: " + (char) b);          //Display the Character
@@ -51,7 +53,8 @@ public class Reader {
                 e.printStackTrace();
             } finally {
                 try {
-                    reader.close();
+                    fileReader.close();
+                    bufferedReader.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
